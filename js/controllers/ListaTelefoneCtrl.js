@@ -1,4 +1,4 @@
-angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, $filter, $http) {
+angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, $filter, contatosApi) {
             $scope.app = "Lista Telefonica";
 
             $scope.contatos = [
@@ -16,17 +16,14 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
             ];
 
             var carregarHerois = function() {
-                $http({
-                    method: "GET",
-                    url: "http://localhost:57795/api/herois/personagem/2"
-                }).then(function (response){
+                contatosApi.getContatos().then(function (response){
                     console.log(response.data);
                 }, function(error){
                     console.log(error);
                 });
             };
 
-            carregarHerois();
+            // carregarHerois();
 
             $scope.adicionarContato = function(contato) {
                 $scope.contatos.push(contato);
@@ -50,4 +47,4 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
                 $scope.criterioDeOrdenacao = campo;
                 $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
             };
-        });
+});
