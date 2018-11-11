@@ -1,34 +1,39 @@
-angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, $filter, contatosApi) {
+angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, contatosApi, operadorasApi, serialGenerator) {
+            console.log(serialGenerator.generate());
             $scope.app = "Lista Telefonica";
 
-            $scope.contatos = [
-                {nome: $filter('uppercase')("Pedro"), telefone: "99998888", data: new Date(), operadora: {nome: "Oi", codigo: 14, categoria: "Celular"}, cor: "blue"},
-                {nome: "Ana", telefone: "99998877", data: new Date(), operadora: {nome: "Vivo", codigo: 15, categoria: "Celular"}, cor: "red"},
-                {nome: "Maria", telefone: "99998866", data: new Date(), operadora: {nome: "Tim", codigo: 41, categoria: "Celular"}, cor: "green"}
-            ];
+            $scope.contatos = [];
+            $scope.operadoras = [];
 
-            $scope.operadoras = [
-                {nome: "Oi", codigo: 14, categoria: "Celular", preco: 2},
-                {nome: "Vivo", codigo: 15, categoria: "Celular", preco: 3},
-                {nome: "Tim", codigo: 41, categoria: "Celular", preco: 4},
-                {nome: "GVT", codigo: 41, categoria: "Fixo", preco: 1},
-                {nome: "Embratel", codigo: 41, categoria: "Fixo", preco: 3},
-            ];
+            carregarContatos();
+            carregarOperadoras();
 
-            var carregarHerois = function() {
+            function carregarContatos () {
                 contatosApi.getContatos().then(function (response){
-                    console.log(response.data);
+                    $scope.contatos = response.data;
                 }, function(error){
                     console.log(error);
                 });
             };
 
-            // carregarHerois();
+            function carregarOperadoras () {
+                operadorasApi.getOperadoras().then(function(response){
+                    $scope.operadoras = response.data;
+                }, function(error){
+                    console.log(error);
+                });
+            };
 
-            $scope.adicionarContato = function(contato) {
-                $scope.contatos.push(contato);
-                delete $scope.contato;
-                $scope.contatoForm.$setPristine();
+            $scope.adicionarContato = function(contato) {              
+                contato.serial = serialGenerator.generate();
+                contato.data = new Date();
+
+                contatosApi.saveContato(contato).then(function(){
+                    $scope.contatos.push(contato);
+                },
+                function(error){
+                    console.log(error);
+                });
             };
 
             $scope.apagarContatos = function(contatos){

@@ -12,6 +12,7 @@
         <table ng-show="contatos.length > 0" class="table">
             <tr>
                 <th></th>
+                <th>Serial</th>
                 <th><a href="" ng-click="ordenarPor('nome')">Nome</a></th>
                 <th><a href="" ng-click="ordenarPor('telefone')">Telefone</a></th>
                 <th>Operadora</th>
@@ -20,6 +21,7 @@
             </tr>
             <tr ng-class="{'selecionado-cor negrito': contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao">
                 <td><input type="checkbox" ng-model="contato.selecionado" /></td>
+                <td>{{contato.serial}}</td>
                 <td>{{contato.nome}}</td>
                 <td>{{contato.telefone}}</td>
                 <td>{{contato.operadora.nome | lowercase}}</td>
@@ -35,7 +37,8 @@
             <option value="">Selecione uma operadora</option>
         </select>
         </form>
-        <div ng-messages="contatoForm.nome.$error" class="alert alert-danger">
+        <div ng-messages="contatoForm.nome.$error" class="alert alert-danger" ng-show="(contatoForm.nome.$error.required || contatoForm.nome.$error.minlength)  &&
+            contatoForm.nome.$dirty">
             <div ng-message="required">
                 Por favor, preencha o nome.
             </div>
@@ -62,7 +65,10 @@
     <script src="../lista-telefonica/node_modules/angular-messages/angular-messages.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers/ListaTelefoneCtrl.js"></script>
+    <script src="js/services/operadorasApiService.js"></script>
     <script src="js/services/contatosApiService.js"></script>
+    <script src="js/services/serialGeneratorService.js"></script>
+    <script src="config/serialGeneratorConfig.js"></script>
     <script src="js/configValue.js"></script>
 </body>
 </html>

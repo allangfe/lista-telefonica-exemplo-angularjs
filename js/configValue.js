@@ -1,3 +1,3 @@
 angular.module("listaTelefonica").value("config", {
-    baseUrl: "http://localhost:57795"
+    baseUrl: "http://localhost:3000"
 });
